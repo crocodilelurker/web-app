@@ -31,4 +31,22 @@ const sendOtpToPhoneNumber = async (phoneNumber) => {
     }
 }
 //verification pendingb
-
+const verifyOtp = async (phoneNumber,otp) =>{
+    try {
+        const response = client.verify.v2.services(serviceSid).verificationChecks.create({
+            to: phoneNumber,
+            code:otp
+        });
+        console.log("This is my OTP response", response);
+        return response;
+    }
+    catch (error) {
+        console.error("OTP verification failed ")
+        throw new Error("Failed to Verify OTP")
+    }
+}
+//12235
+module.exports= {
+    verifyOtp,
+    sendOtpToPhoneNumber
+}

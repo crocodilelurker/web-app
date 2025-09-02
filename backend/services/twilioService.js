@@ -18,7 +18,7 @@ const sendOtpToPhoneNumber = async (phoneNumber) => {
         console.log("Sending OTP")
         if (!phoneNumber)
             throw new Error("Phone Number is required for this service")
-        const response = client.verify.v2.services(serviceSid).verifications.create({
+        const response =await client.verify.v2.services(serviceSid).verifications.create({
             to: phoneNumber,
             channel: 'sms'
         });
@@ -33,7 +33,7 @@ const sendOtpToPhoneNumber = async (phoneNumber) => {
 //verification pendingb
 const verifyOtp = async (phoneNumber,otp) =>{
     try {
-        const response = client.verify.v2.services(serviceSid).verificationChecks.create({
+        const response = await client.verify.v2.services(serviceSid).verificationChecks.create({
             to: phoneNumber,
             code:otp
         });

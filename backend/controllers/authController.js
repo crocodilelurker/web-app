@@ -2,7 +2,8 @@ const otpGenerator = require ('../utils/otpGenerator.js')
 const User = require('../models/User.js');
 const response = require('../utils/responseHandler.js');
 const { sendOtpToEmail } = require('../services/emailService.js');
-const twillioService = require('../services/twilioService.js')
+const twillioService = require('../services/twilioService.js');
+const { generateToken } = require('../utils/generateToken.js');
 
 
 const sendOtp = async function(req,res){
@@ -27,7 +28,7 @@ const sendOtp = async function(req,res){
             return response(res,400,'Phone Number or Phone Suffix is not received')
         }
         const fullPhoneNumber = `${phoneSuffix}${phoneNumber}`;
-        const user = await User.findOne({phoneNumber})
+        let user = await User.findOne({phoneNumber})
         if(!user)
         {
             user = new User({phoneNumber,phoneSuffix,})
@@ -45,9 +46,10 @@ const sendOtp = async function(req,res){
 const verifyOtp = async(req,res) => {
      const {phoneNumber,phoneSuffix,email,otp}= req.body;
      try {
+        let user;
         if(email)
         {
-            let user;
+            
             user = await User.findOne({email});
             if(!user)
             {
@@ -84,8 +86,19 @@ const verifyOtp = async(req,res) => {
             await user.save();
         }
         //token generation step 14536
-        
+        const token = generateToken(user?._id);
+        res.cookie("auth_token",token,{
+            httpOnly: true,
+            maxAge : 1000 * 60 * 60 * 24 * 365
+        });
+        return response(res,200,"OTP Verified Successfully",{token,user})
      } catch (error) {
-        
+        console.error(error);
+        return response (res,400,"Internal Server Error")
      }
+}
+
+module.exports={
+    sendOtp,
+    verifyOtp
 }

@@ -124,7 +124,20 @@ const updateProfile = async (req,res) =>{
         return response(res,500,"Internal Server Error")
     }
 }
-
+const checkAuthenticated = async (req,res) => {
+    const userId=  req.user.userId;
+    try{
+        if(!userId)
+        {
+            return response(res,401,"Unauthorized")
+        }
+    }
+    catch(error)
+    {
+        console.error(error)
+        return response(res,500,"Internal Server Error authController.js")
+    }
+}
 const logout = async (req,res) => {
     try {
         res.cookie("auth_token","", {expires:new Date(0)})
@@ -138,5 +151,6 @@ module.exports={
     sendOtp,
     verifyOtp,
     updateProfile,
-    logout
+    logout,
+    checkAuthenticated
 }

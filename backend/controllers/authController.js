@@ -127,7 +127,7 @@ const updateProfile = async (req,res) =>{
 
 const logout = async (req,res) => {
     try {
-        res.cookie("auth_token","", {expiry:new Date(0)})
+        res.cookie("auth_token","", {expires:new Date(0)})
         return response(res,200,"Logout Successfull")
     } catch (error) {
         console.error(error);

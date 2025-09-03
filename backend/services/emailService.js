@@ -80,6 +80,8 @@ const sendOtpToEmail = async (email, otp) => {
   });
 };
 
+//20106
+
 
 module.exports={
     sendOtpToEmail};//exporting transporter is not necesary 

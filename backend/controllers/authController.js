@@ -4,6 +4,7 @@ const response = require('../utils/responseHandler.js');
 const { sendOtpToEmail } = require('../services/emailService.js');
 const twillioService = require('../services/twilioService.js');
 const { generateToken } = require('../utils/generateToken.js');
+const { uploadFileTOCloudinary } = require('../config/cloudinaryConfig.js');
 
 
 const sendOtp = async function(req,res){
@@ -97,8 +98,36 @@ const verifyOtp = async(req,res) => {
         return response (res,400,"Internal Server Error")
      }
 }
+const updateProfile = async (req,res) =>{
+    const {username,agreed,about}= req.body;
+    const userId = req.user.userId;
+    try {
+        const user = await User.findById(userId);
+        const file = req.file;
+        if(file)
+        {
+            const uploadResult = await uploadFileTOCloudinary(file);
+            console.log(uploadResult);
+            user.profilePicture = uploadResult?.secure_url;
+        }
+        else if(req.body.profilePicture)
+        {
+            user.profilePicture = req.body.profilePicture;
+        }
+        if(username) user.username = username;
+        if(agreed) user.agreed = agreed;
+        if(about) user.about = about;
+        await user.save();
+        return response(res,200,"User Updated Successfully")
+    } catch (error) {
+        return response(res,500,"Internal Server Error")
+    }
+} 
+
+
 
 module.exports={
     sendOtp,
-    verifyOtp
+    verifyOtp,
+    updateProfile
 }

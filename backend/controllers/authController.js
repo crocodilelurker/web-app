@@ -118,16 +118,25 @@ const updateProfile = async (req,res) =>{
         if(agreed) user.agreed = agreed;
         if(about) user.about = about;
         await user.save();
-        return response(res,200,"User Updated Successfully")
+        return response(res,200,"User Updated Successfully",user)
     } catch (error) {
+        console.log(error);
         return response(res,500,"Internal Server Error")
     }
-} 
+}
 
-
-
+const logout = async (req,res) => {
+    try {
+        res.cookie("auth_token","", {expiry:new Date(0)})
+        return response(res,200,"Logout Successfull")
+    } catch (error) {
+        console.error(error);
+        return response(res,500,"internal server error authcontroller.js logout")
+    }
+}
 module.exports={
     sendOtp,
     verifyOtp,
-    updateProfile
+    updateProfile,
+    logout
 }

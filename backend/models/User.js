@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     {
         type: String
     },
-    userAbout: {
+    about: {
         type: String
     },
     lastSeen:

@@ -9,6 +9,8 @@ router.post('/verify-otp',authController.verifyOtp)
 router.get('/logout',authController.logout)
 
 router.put('/update-profile',authMiddleware,multerMiddleware,authController.updateProfile)
-
+router.get('/check-auth',authMiddleware,authController.checkAuthenticated)
 module.exports = 
     router
+
+//23728

@@ -142,21 +142,29 @@ const logout = async (req, res) => {
     }
 }
 
-const getAllUser = async (req, res) => {
+const getAllUsers = async (req, res) => {
     const loggedInUser = req.user.userId;
     const users = await User.find({ _id: { $ne: loggedInUser } }).select("username profilePicture isOnline lastSeen about phoneNumber phoneSuffix").lean();
     //users array reported without logged in user 
     try {
-        const usersWithConversatio = await Promise.all(
+        const usersWithConversation = await Promise.all(
             users.map(async (user) => {
                 const conversation = await Conversation.findOne({
                     participants: { $all: [loggedInUser, user?._id] }
                 }).populate(
                     //path: 24332
-                    
-                )
+                    {
+                        path: "lastMessage",
+                        select: "content createdAt sender receiver"
+                    }
+                ).lean();
+                return {
+                    ...user,
+                    conversation: conversation || null
+                }
             })
         )
+        return response(res, 200, "All conversation fetch success", usersWithConversation);
     }
     catch (error) {
         console.error(error)
@@ -169,5 +177,5 @@ module.exports = {
     updateProfile,
     logout,
     checkAuthenticated,
-    getAllUser
+    getAllUsers
 }

@@ -12,7 +12,7 @@ const messageSchema = new mongoose.Schema({
             emoji:{type:String}
         }
     ],
-    messageStatus : {type:String, default:'send'}
+    messageStatus : {type:String, default:'sent'}
 }, { timestamps: true })
 
 const Message = mongoose.model('Message', messageSchema);

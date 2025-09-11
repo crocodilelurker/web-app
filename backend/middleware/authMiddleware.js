@@ -1,6 +1,7 @@
-const { response } = require('express');
+
 const jwt = require ('jsonwebtoken');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+const response = require('../utils/responseHandler');
 
 dotenv.config();
 //actually we can use this to protect our routes

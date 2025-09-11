@@ -10,6 +10,9 @@ router.get('/logout',authController.logout)
 
 router.put('/update-profile',authMiddleware,multerMiddleware,authController.updateProfile)
 router.get('/check-auth',authMiddleware,authController.checkAuthenticated)
+router.get('/users',authMiddleware,authController.getAllUsers)
+
+
 module.exports = 
     router
 

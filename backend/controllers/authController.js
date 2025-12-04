@@ -35,7 +35,7 @@ const sendOtp = async function (req, res) {
         }
         await twillioService.sendOtpToPhoneNumber(fullPhoneNumber);
         await user.save();
-        return response(res, 200, 'OTP sent to your phone', user);
+        return response(res, 200, 'OTP sent to your phone');
     }
     catch (error) {
         console.log(error.message);
